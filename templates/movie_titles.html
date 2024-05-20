@@ -9,10 +9,9 @@
 </head>
 <!-- part containing the visible content -->
 <body>
-    <h1 class="text-center">Netflix Title</h1>
+    <h1 class="text-center">Netflix Title Table</h1>
 
     <div class="container mt-5">
-        <button class="btn btn-primary mb-3" onclick="showCreateForm()">Create New Title</button>
         <table class="table table-bordered" id="titlesTable">
             <thead>
                 <tr>
@@ -87,10 +86,10 @@
         function handleSubmit(event) {
             event.preventDefault();
             const form = $('#titleForm');
-            let url = form.data('isUpdate') ? `/update_title/${$('#id').val()}` : '/create_title';
-            let type = form.data('isUpdate') ? 'PUT' : 'POST';
+            let url = form.data('isUpdate') ? `/update_title/${$('#id').val()}` : '/create_title'; // determines the URL based on whether it's an update or create action
+            let type = form.data('isUpdate') ? 'PUT' : 'POST'; // determines the method type based on the action
 
-            $.ajax({
+            $.ajax({    // send an AJAX request for the form submission
                 url: url,
                 type: type, // POST for create, PUT for update
                 data: form.serialize(),
