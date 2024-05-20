@@ -15,12 +15,12 @@ This Flask application is designed to manage a database of Netflix titles, provi
 - **Update Existing Titles**: Users can update details of existing titles.
 - **Delete Titles**: Titles can be removed from the database.
 
-## Technology Stack
+## Softwares used
 
-- **Flask**: A lightweight WSGI web application framework.
-- **SQLAlchemy**: ORM (Object-Relational Mapping) library used for database interactions.
-- **MySQL**: Database system used for storing all title data.
-- **Bootstrap**: For styling the front-end and making it responsive.
+- **Flask**
+- **SQLAlchemy**
+- **MySQL**
+- **Bootstrap**
 
 
 ## Bibliography:
@@ -38,4 +38,6 @@ This Flask application is designed to manage a database of Netflix titles, provi
 > Various Authors. (n.d.). Ajax Form Submit to POST JSON Data in MySQL Database using PHP and AJAX. Retrieved from YouTube: https://www.youtube.com/watch?v=Z21zKd6a2Yc
 
 > Bootstrap. (n.d.). Introduction. Retrieved from https://getbootstrap.com/
+
+> WSAA Module lectures: 6 - 9 
 
