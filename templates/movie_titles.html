@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!-- metadata of HTML document is placed within the <head> tag -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Movies</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<!-- part containing the visible content -->
+<body>
+    <h1 class="text-center">Netflix Title</h1>
+
+    <div class="container mt-5">
+        <button class="btn btn-primary mb-3" onclick="showCreateForm()">Create New Title</button>
+        <table class="table table-bordered" id="titlesTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Country</th>
+                    <th>Release Year</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <!-- table where data rows will be added -->
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- part contains the form used to submit new or updated titles -->
+    <div class="container">
+        <form id="titleForm" onsubmit="handleSubmit(event)">
+                <!-- id will be hidden since it's primary key and can't be altered -->
+            <input type="hidden" name="id" id="id">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="title" id="title" placeholder="Title">
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" name="type" id="type" placeholder="Type">
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" name="country" id="country" placeholder="Country">
+            </div>
+            <div class="mb-3">
+                <input type="number" class="form-control" name="release_year" id="release_year" placeholder="Release Year">
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
+     <!-- script part to handle functionalities -->
+    <script>
+        // wait until the DOM is fully loaded before executing the script
+        $(document).ready(function() {
+            fetchTitles();
+        });
+        // function to fetch title data from the server and display it
+        function fetchTitles() {
+            $.ajax({
+                url: '/get_titles',
+                type: 'GET',
+                success: function(titles) {
+                    let tableBody = $('#titlesTable tbody');
+                    tableBody.empty();
+                    titles.forEach(title => {
+                        let updateButton = `<button class="btn btn-warning" onclick="showUpdateForm(${title.id})">Update</button>`;
+                        let deleteButton = `<button class="btn btn-danger" onclick="deleteTitle(${title.id})">Delete</button>`;
+                        tableBody.append(
+                            `<tr>
+                                <td>${title.id}</td>
+                                <td>${title.title}</td>
+                                <td>${title.type}</td>
+                                <td>${title.country}</td>
+                                <td>${title.release_year}</td>
+                                <td>${updateButton}</td>
+                                <td>${deleteButton}</td>
+                            </tr>`
+                        );
+                    });
+                }
+            });
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const form = $('#titleForm');
+            let url = form.data('isUpdate') ? `/update_title/${$('#id').val()}` : '/create_title';
+            let type = form.data('isUpdate') ? 'PUT' : 'POST';
+
+            $.ajax({
+                url: url,
+                type: type, // POST for create, PUT for update
+                data: form.serialize(),
+                success: function(response) {
+                    alert(response.message);
+                    fetchTitles();
+                    form[0].reset(); // Reset the form fields
+                    form.data('isUpdate', false);
+                }
+            });
+        }
+        // function to populate the form fields for updating a title
+        function showUpdateForm(id) {
+            $.ajax({
+                url: `/get_title/${id}`,
+                type: 'GET', // method to get data
+                // fetch data and set form with data filled for update
+                success: function(data) {
+                    $('#id').val(id); 
+                    $('#title').val(data.title);
+                    $('#type').val(data.type);
+                    $('#country').val(data.country);
+                    $('#release_year').val(data.release_year);
+                    $('#titleForm').data('isUpdate', true);
+                }
+            });
+        }
+
+        function showCreateForm() {
+            $('#titleForm')[0].reset(); // reset all form fields to their default values
+            $('#titleForm').data('isUpdate', false);
+        }
+
+        function deleteTitle(id) {
+            if (confirm('Are you sure you want to delete this title?')) {
+                $.ajax({
+                    url: `/delete_title/${id}`, // endpoint to delete a specific title
+                    type: 'DELETE',     // method to delete data
+                    success: function(response) {
+                        alert(response.message);
+                        fetchTitles();
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
