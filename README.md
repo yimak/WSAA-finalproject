@@ -5,7 +5,7 @@
 
 # Netflix Titles Table 
 
-This Flask application is designed to manage a database of Netflix titles, providing a web interface to create, read, update, and delete (CRUD) movie titles. Built with Flask and SQLAlchemy, it offers a RESTful API and integrates with a MySQL database.
+This Flask application is designed to manage a database of Netflix titles, providing a web interface to create, read, update, and delete (CRUD) movie titles. Built with Flask and SQLAlchemy, it offers a RESTful API and integrates with a MySQL database
 
 ## Features
 
